@@ -73,7 +73,9 @@
     // ❗ Debug properly using the Console
 
     // 👉 CHALLENGE 1
-    function profileActivation() {
+    function profileActivation(profile, reason) {
+
+
       // 🧠 profileActivation takes two arguments, profile and reason, which are an object and a string respectively
       //  The reason arg is only used -and therefore required- to deactivate profiles, not to activate them
       //  The profile arg has an `active` property holding a Boolean value
@@ -85,10 +87,45 @@
       //    * If the profile is active but it has a `reason` prop, return the string "confirm status manually"
       //    * If the profile is **missing** an `active` prop, return the string "impossible to ascertain status"
       // 🌟 HINT: to confirm the existence of a prop, check that its value is not undefined
+
+      if(profile.active && profile.reason === ''){
+        return "confirm status manually"
+      }
+
+      if(profile.active && profile.reason){
+        return "confirm status manually"
+      }
+
+      if(profile.active === undefined){
+        return "impossible to ascertain status"
+      }
+
+      if(!profile.active && profile.reason === undefined){      // if(profile.active === false)
+        return "confirm status manually"
+      }
+      if(profile.active === true && reason === 'because'){
+        profile.active = false
+        if(profile.reason === undefined){
+          profile.reason = 'because'
+        }
+        return profile
+      }
+      if(profile.reason === 'because'){
+        delete profile.reason
+        if(profile.active === false){
+          profile.active = true
+      }
+      return profile
+      }
+      // if(profile.active === false && profile.reason === 'because'){
+      //  delete profile.reason && profile.active === true
+      //  return profile
+      // }
+
     }
 
     // 👉 CHALLENGE 2
-    function mineSweeper() {
+    function mineSweeper(grid,x,y) {
       // 🧠 mineSweeper takes a grid as its first argument, and coordinates x and y as the second and third args
       //  The grid is an array of arrays in the following format: [["🟥","🟦","🟥"],["🟦","🟥","🟥"],["🟥","🟦","🟦"]]
       //  Each subarray is a row of the grid, the first subarray being the top row:
@@ -106,10 +143,25 @@
       //    * If the player lands on blue, return the string "🟦 🥳"
       // 🧠 Edge cases:
       //    * If the x or y coordinates are under 1 or over 3, return the string "invalid coordinates"
+      if(x < 1 || x > 3 && y < 1 || y > 3){
+        return "invalid coordinates"
+      };
+
+  const cell = grid[y - 1][x - 1];
+
+
+if (cell === "🟥") {
+  return "🟥 💀";
+} else if (cell === "🟦") {
+  return "🟦 🥳";
+}
+
+
+
     }
 
     // 👉 CHALLENGE 3
-    function booleanize() {
+    function booleanize(obj) {
       // 🧠 booleanize takes an object as its single argument, which can have any number of properties
       // Loop over the properties and then return the object, after applying the following transformations:
       //    * If a value is the number zero, it must be transformed into the Boolean false
@@ -118,10 +170,28 @@
       // 🧠 Edge cases:
       //    * If a property name exceeds 9 characters, return the string "shorten all prop names to 9 chars or less"
       // 🌟 HINT: careful not to perform any unintended changes on the object
+
+      for(let key in obj){
+        if(key.length > 9){
+
+          return "shorten all prop names to 9 chars or less"
+        }
+        console.log(key)
+      if(obj[key] === 0){
+        obj[key] = false
+      }
+      if(obj[key]=== 1){
+        obj[key]= true
+      }
+     if(obj[key]=== null){
+      delete obj[key]
+     }
+      }
+       return obj
     }
 
     // 👉 CHALLENGE 4
-    function scrub() {
+    function scrub(string, array) {
       // 🧠 scrub takes a string "text" as its first argument, and an array of forbidden words "forbidden" as its second
       // Any word in the text included in the array of forbidden words is replaced with a word of equal length but made of lowcase "x"
       // The scrubbed text is then returned from the function, as seen in the examples below
@@ -133,10 +203,22 @@
       //    scrub("aces high", ["high", "aces", "hearts"]) // returns "xxxx xxxx"
       //    scrub("", ["high", "aces""]) // returns ""
       // 🌟 HINT: useful array methods to use are `push`, `indexOf`, `split`, `join`
+     if(string === '') return '';
+     let newArr = [];
+     let words = string.split(' ');
+     for(let word of words){
+      if(array.indexOf(word) !== -1){
+        const scrubbedWord = 'x'.repeat(word.length)
+        newArr.push(scrubbedWord)
+      }else{
+        newArr.push(word)
+      }
+     }
+     return newArr.join(' ')
     }
 
     // 👉 CHALLENGE 5
-    function normalizePhoneNumber() {
+    function normalizePhoneNumber(number) {
       // 🧠 normalizePhoneNumber takes a string as its only argument, representing a ten-digit number
       // The function returns a string formatted as seen below
       // 🧠 Examples of usage:
@@ -148,6 +230,49 @@
       // 🌟 HINT: instead of looping over the number's digits, loop backwards over a template "(XXX) XXX-XXXX"
       // 🌟 HINT: at each iteration, if the current character is an "X", replace it with the result of popping a digit from the number
       // 🌟 HINT: if you'd rather loop forwards, use `shift` instead of `pop`
+
+//       if(number.length !== 10) return  "type a 10-digit number";
+//       for(let el of number){
+//         if(el === 'x' ){
+//           return "invalid phone number"
+//         }
+//       }
+//       let template = "(XXX) XXX-XXXX";
+//       let phoneNumber = '';
+//       let val = number.split('')
+//       for(let i = 0; i <= template.length; i++){
+//         let ele = template[i];
+//         let res = val.shift()
+//         if(ele === 'X'){
+//           phoneNumber += res
+//         }else{
+//           phoneNumber += ele
+//         }
+//       }
+
+// return phoneNumber
+if (number.length !== 10) return "type a 10-digit number";
+  for (let el of number) {
+    if (isNaN(el)) {
+      return "invalid phone number";
+    }
+
+  }
+  let template = "(XXX) XXX-XXXX";
+  let phoneNumber = "";
+  let val = number.split("");
+  for (let i = 0; i < template.length; i++) {
+    let ele = template[i];
+
+    if (ele === "X") {
+      let res = val.shift();
+      phoneNumber += res;
+    } else {
+      phoneNumber += ele;
+    }
+  }
+
+  return phoneNumber;
     }
 
     // 👉 CHALLENGE 6 (bonus, NOT graded)
